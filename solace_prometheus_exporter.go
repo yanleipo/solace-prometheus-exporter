@@ -217,8 +217,12 @@ var metricDesc = map[string]Metrics{
 	"VpnStats": {
 		"vpn_rx_msgs_total":           prometheus.NewDesc(namespace+"_"+"vpn_rx_msgs_total", "Number of received messages.", variableLabelsVpn, nil),
 		"vpn_tx_msgs_total":           prometheus.NewDesc(namespace+"_"+"vpn_tx_msgs_total", "Number of transmitted messages.", variableLabelsVpn, nil),
+		"vpn_rx_msgs_rate":            prometheus.NewDesc(namespace+"_"+"vpn_rx_msgs_rate", "Rate of received messages.", variableLabelsVpn, nil),
+		"vpn_tx_msgs_rate":            prometheus.NewDesc(namespace+"_"+"vpn_tx_msgs_rate", "Rate of transmitted messages.", variableLabelsVpn, nil),
 		"vpn_rx_bytes_total":          prometheus.NewDesc(namespace+"_"+"vpn_rx_bytes_total", "Number of received bytes.", variableLabelsVpn, nil),
 		"vpn_tx_bytes_total":          prometheus.NewDesc(namespace+"_"+"vpn_tx_bytes_total", "Number of transmitted bytes.", variableLabelsVpn, nil),
+		"vpn_rx_bytes_rate":          prometheus.NewDesc(namespace+"_"+"vpn_rx_bytes_rate", "Rate of received bytes.", variableLabelsVpn, nil),
+		"vpn_tx_bytes_rate":          prometheus.NewDesc(namespace+"_"+"vpn_tx_bytes_rate", "Rate of transmitted bytes.", variableLabelsVpn, nil),
 		"vpn_rx_discarded_msgs_total": prometheus.NewDesc(namespace+"_"+"vpn_rx_discarded_msgs_total", "Number of discarded received messages.", variableLabelsVpn, nil),
 		"vpn_tx_discarded_msgs_total": prometheus.NewDesc(namespace+"_"+"vpn_tx_discarded_msgs_total", "Number of discarded transmitted messages.", variableLabelsVpn, nil),
 	},
@@ -1124,8 +1128,12 @@ func (e *Exporter) getVpnStatsSemp1(ch chan<- prometheus.Metric, vpnFilter strin
 	for _, vpn := range target.RPC.Show.MessageVpn.Vpn {
 		ch <- prometheus.MustNewConstMetric(metricDesc["VpnStats"]["vpn_rx_msgs_total"], prometheus.CounterValue, vpn.Stats.DataRxMsgCount, vpn.Name)
 		ch <- prometheus.MustNewConstMetric(metricDesc["VpnStats"]["vpn_tx_msgs_total"], prometheus.CounterValue, vpn.Stats.DataTxMsgCount, vpn.Name)
+		ch <- prometheus.MustNewConstMetric(metricDesc["VpnStats"]["vpn_rx_msgs_rate"], prometheus.CounterValue, vpn.Stats.RxMsgRate, vpn.Name)
+		ch <- prometheus.MustNewConstMetric(metricDesc["VpnStats"]["vpn_tx_msgs_rate"], prometheus.CounterValue, vpn.Stats.TxMsgRate, vpn.Name)
 		ch <- prometheus.MustNewConstMetric(metricDesc["VpnStats"]["vpn_rx_bytes_total"], prometheus.CounterValue, vpn.Stats.DataRxByteCount, vpn.Name)
 		ch <- prometheus.MustNewConstMetric(metricDesc["VpnStats"]["vpn_tx_bytes_total"], prometheus.CounterValue, vpn.Stats.DataTxByteCount, vpn.Name)
+		ch <- prometheus.MustNewConstMetric(metricDesc["VpnStats"]["vpn_rx_bytes_rate"], prometheus.CounterValue, vpn.Stats.RxByteRate, vpn.Name)
+		ch <- prometheus.MustNewConstMetric(metricDesc["VpnStats"]["vpn_tx_bytes_rate"], prometheus.CounterValue, vpn.Stats.TxByteRate, vpn.Name)
 		ch <- prometheus.MustNewConstMetric(metricDesc["VpnStats"]["vpn_rx_discarded_msgs_total"], prometheus.CounterValue, vpn.Stats.IngressDiscards.DiscardedRxMsgCount, vpn.Name)
 		ch <- prometheus.MustNewConstMetric(metricDesc["VpnStats"]["vpn_tx_discarded_msgs_total"], prometheus.CounterValue, vpn.Stats.EgressDiscards.DiscardedTxMsgCount, vpn.Name)
 	}

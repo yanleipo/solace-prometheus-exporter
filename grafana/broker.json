@@ -22,8 +22,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 2,
-  "id": 10,
-  "iteration": 1633858627533,
+  "id": 11,
+  "iteration": 1633859790649,
   "links": [],
   "panels": [
     {
@@ -71,8 +71,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "label_replace(solace_up{instance=\"$instance\",job=\"solace-std\"}, \"instance_short\", \"$1\", \"instance\", \"([\\\\w\\\\-]+).*\")",
+          "exemplar": true,
+          "expr": "label_replace(solace_up{instance=\"$instance\"}, \"instance_short\", \"$1\", \"instance\", \"([\\\\w\\\\-]+).*\")",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "{{instance_short}}",
           "refId": "A"
@@ -179,9 +181,12 @@
       "pluginVersion": "8.1.7",
       "targets": [
         {
-          "expr": "label_replace(solace_system_mate_link_latency_avg_seconds{instance=\"$instance\",job=\"solace-std\"}, \"instance_short\", \"$1\", \"instance\", \"([\\\\w\\\\-]+).*\")",
+          "exemplar": true,
+          "expr": "label_replace(solace_system_mate_link_latency_avg_seconds{instance=\"$instance\"}, \"instance_short\", \"$1\", \"instance\", \"([\\\\w\\\\-]+).*\")",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
+          "legendFormat": "",
           "refId": "A"
         }
       ],
@@ -248,9 +253,12 @@
       "pluginVersion": "8.1.7",
       "targets": [
         {
-          "expr": "label_replace(solace_system_disk_latency_avg_seconds{instance=\"$instance\",job=\"solace-std\"}, \"instance_short\", \"$1\", \"instance\", \"([\\\\w\\\\-]+).*\")",
+          "exemplar": true,
+          "expr": "label_replace(solace_system_disk_latency_avg_seconds{instance=\"$instance\"}, \"instance_short\", \"$1\", \"instance\", \"([\\\\w\\\\-]+).*\")",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
+          "legendFormat": "",
           "refId": "A"
         }
       ],
@@ -317,9 +325,12 @@
       "pluginVersion": "8.1.7",
       "targets": [
         {
-          "expr": "label_replace(solace_system_compute_latency_avg_seconds{instance=\"$instance\",job=\"solace-std\"}, \"instance_short\", \"$1\", \"instance\", \"([\\\\w\\\\-]+).*\")",
+          "exemplar": true,
+          "expr": "label_replace(solace_system_compute_latency_avg_seconds{instance=\"$instance\"}, \"instance_short\", \"$1\", \"instance\", \"([\\\\w\\\\-]+).*\")",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
+          "legendFormat": "",
           "refId": "A"
         }
       ],
@@ -1424,5 +1435,5 @@
   "timezone": "",
   "title": "Solace broker",
   "uid": "HUkhHbPWz",
-  "version": 4
+  "version": 2
 }

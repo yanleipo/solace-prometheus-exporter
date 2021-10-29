@@ -69,6 +69,7 @@ func (e *Exporter) redirectPolicyFunc(req *http.Request, _ []*http.Request) erro
 // Call http post for the supplied uri and body
 func (e *Exporter) postHTTP(uri string, _ string, body string) (io.ReadCloser, error) {
 	tr := &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: !e.config.sslVerify}}
+        tr.DisableCompression = true
 	client := http.Client{
 		Timeout:       e.config.timeout,
 		Transport:     tr,

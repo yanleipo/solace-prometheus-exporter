@@ -103,6 +103,9 @@ var metricDesc = map[string]Metrics{
 		"system_version_uptime_totalsecs": prometheus.NewDesc(namespace+"_"+"system_version_uptime_totalsecs", "Broker uptime in seconds ", nil, nil),
 		"exporter_version_current":        prometheus.NewDesc(namespace+"_"+"exporter_version_current", "Exporter Version as XXXYYYZZZ", nil, nil),
 	},
+	"Memory": {
+		"nab_buffer_load_factor":		prometheus.NewDesc(namespace+"_"+"nab_buffer_load_factor", "NAB Buffer load factor ", nil, nil),
+	},
 	"Health": {
 		"system_disk_latency_min_seconds":      prometheus.NewDesc(namespace+"_"+"system_disk_latency_min_seconds", "Minimum disk latency.", nil, nil),
 		"system_disk_latency_max_seconds":      prometheus.NewDesc(namespace+"_"+"system_disk_latency_max_seconds", "Maximum disk latency.", nil, nil),
@@ -370,9 +373,51 @@ func (e *Exporter) getVersionSemp1(ch chan<- prometheus.Metric) (ok float64, err
 	var vmrVersionNr float64
 	vmrVersionNr, _ = strconv.ParseFloat(vmrVersionStrBuffer.String(), 64)
 
-	ch <- prometheus.MustNewConstMetric(metricDesc["Version"]["system_version_currentload"], prometheus.GaugeValue, vmrVersionNr)
-	ch <- prometheus.MustNewConstMetric(metricDesc["Version"]["system_version_uptime_totalsecs"], prometheus.GaugeValue, target.RPC.Show.Version.Uptime.TotalSecs)
-	ch <- prometheus.MustNewConstMetric(metricDesc["Version"]["exporter_version_current"], prometheus.GaugeValue, solaceExporterVersion)
+	ch <- prometheus.MustNewConstMetric(metricDesc["NAB"]["nab_pool0_buffer"], prometheus.GaugeValue, vmrVersionNr)
+
+
+	return 1, nil
+}
+
+// Get Memory of broker
+func (e *Exporter) getMemorySemp1(ch chan<- prometheus.Metric) (ok float64, err error) {
+	type Data struct {
+		RPC struct {
+			Show struct {
+				Memory struct {
+					Slotinfos struct {
+						Slotinfo struct {
+							NabBufferLoadFactor float64 `xml:"nab-buffer-load-factor"`
+						} `xml:"slot-info"`
+					} `xml:"slot-infos"`
+				} `xml:"memory"`
+			} `xml:"show"`
+		} `xml:"rpc"`
+		ExecuteResult struct {
+			Result string `xml:"code,attr"`
+		} `xml:"execute-result"`
+	}
+
+	command := "<rpc><show><memory></memory></show></rpc>"
+	body, err := e.postHTTP(e.config.scrapeURI+"/SEMP", "application/xml", command)
+	if err != nil {
+		_ = level.Error(e.logger).Log("msg", "Can't scrape getMemorySemp1", "err", err, "broker", e.config.scrapeURI)
+		return 0, err
+	}
+	defer body.Close()
+	decoder := xml.NewDecoder(body)
+	var target Data
+	err = decoder.Decode(&target)
+	if err != nil {
+		_ = level.Error(e.logger).Log("msg", "Can't decode Xml getMemorySemp1", "err", err, "broker", e.config.scrapeURI)
+		return 0, err
+	}
+	if target.ExecuteResult.Result != "ok" {
+		_ = level.Error(e.logger).Log("msg", "Unexpected result for getMemorySemp1", "command", command, "result", target.ExecuteResult.Result, "broker", e.config.scrapeURI)
+		return 0, errors.New("unexpected result: see log")
+	}
+
+	ch <- prometheus.MustNewConstMetric(metricDesc["Memory"]["nab_buffer_load_factor"], prometheus.GaugeValue, target.RPC.Show.Memory.Slotinfos.Slotinfo.NabBufferLoadFactor)
 
 	return 1, nil
 }
@@ -2091,6 +2136,8 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 		switch dataSource.name {
 		case "Version":
 			up, err = e.getVersionSemp1(ch)
+		case "Memory":
+			up, err = e.getMemorySemp1(ch)
 		case "Health":
 			up, err = e.getHealthSemp1(ch)
 		case "Spool":

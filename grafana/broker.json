@@ -23,7 +23,7 @@
   "gnetId": null,
   "graphTooltip": 2,
   "id": 11,
-  "iteration": 1633859790649,
+  "iteration": 1635509587714,
   "links": [],
   "panels": [
     {
@@ -383,6 +383,100 @@
       "targets": [
         {
           "exemplar": true,
+          "expr": "label_replace(solace_nab_buffer_load_factor{instance=\"$instance\"}, \"instance_short\", \"$1\", \"instance\", \"([\\\\w\\\\-]+).*\")",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": " {{vpn_name}}@{{instance_short}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "NAB Buffer Load Factor",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "hiddenSeries": false,
+      "id": 31,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.1.7",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
           "expr": "label_replace(solace_vpn_connections{instance=\"$instance\"}, \"instance_short\", \"$1\", \"instance\", \"([\\\\w\\\\-]+).*\")",
           "format": "time_series",
           "interval": "",
@@ -445,7 +539,7 @@
         "h": 10,
         "w": 12,
         "x": 0,
-        "y": 11
+        "y": 16
       },
       "hiddenSeries": false,
       "id": 23,
@@ -538,7 +632,7 @@
         "h": 10,
         "w": 12,
         "x": 12,
-        "y": 11
+        "y": 16
       },
       "hiddenSeries": false,
       "id": 24,
@@ -631,7 +725,7 @@
         "h": 10,
         "w": 12,
         "x": 0,
-        "y": 21
+        "y": 26
       },
       "hiddenSeries": false,
       "id": 25,
@@ -724,7 +818,7 @@
         "h": 10,
         "w": 12,
         "x": 12,
-        "y": 21
+        "y": 26
       },
       "hiddenSeries": false,
       "id": 26,
@@ -817,7 +911,7 @@
         "h": 10,
         "w": 12,
         "x": 0,
-        "y": 31
+        "y": 36
       },
       "hiddenSeries": false,
       "id": 27,
@@ -910,7 +1004,7 @@
         "h": 10,
         "w": 12,
         "x": 12,
-        "y": 31
+        "y": 36
       },
       "hiddenSeries": false,
       "id": 28,
@@ -1003,7 +1097,7 @@
         "h": 10,
         "w": 12,
         "x": 0,
-        "y": 41
+        "y": 46
       },
       "hiddenSeries": false,
       "id": 29,
@@ -1096,7 +1190,7 @@
         "h": 10,
         "w": 12,
         "x": 12,
-        "y": 41
+        "y": 46
       },
       "hiddenSeries": false,
       "id": 30,
@@ -1189,7 +1283,7 @@
         "h": 10,
         "w": 12,
         "x": 0,
-        "y": 51
+        "y": 56
       },
       "hiddenSeries": false,
       "id": 4,
@@ -1282,7 +1376,7 @@
         "h": 10,
         "w": 12,
         "x": 12,
-        "y": 51
+        "y": 56
       },
       "hiddenSeries": false,
       "id": 7,
@@ -1363,7 +1457,7 @@
       }
     }
   ],
-  "refresh": false,
+  "refresh": "10s",
   "schemaVersion": 30,
   "style": "dark",
   "tags": [
@@ -1376,8 +1470,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "http://admin:admin@192.168.40.233:8080",
-          "value": "http://admin:admin@192.168.40.233:8080"
+          "text": "http://admin:admin@192.168.128.27:80",
+          "value": "http://admin:admin@192.168.128.27:80"
         },
         "datasource": "Prometheus",
         "definition": "label_values(solace_vpn_connections, instance)",
@@ -1435,5 +1529,5 @@
   "timezone": "",
   "title": "Solace broker",
   "uid": "HUkhHbPWz",
-  "version": 2
+  "version": 3
 }
